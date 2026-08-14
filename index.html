@@ -1098,6 +1098,19 @@ function loadData(){
 loadData();
 
 </script>
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js", {
+      updateViaCache: "none"
+    }).then(function () {
+      console.log("Meu Financeiro: modo offline ativado.");
+    }).catch(function (error) {
+      console.error("Erro ao ativar modo offline:", error);
+    });
+  });
+}
+</script>
+  
 </body>
 </html>
