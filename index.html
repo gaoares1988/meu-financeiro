@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>Meu Financeiro</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  background:#0b1120;
+  color:#f8fafc;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  padding-bottom:85px;
+}
+
+button{
+  font-family:inherit;
+}
+
+.app{
+  max-width:700px;
+  margin:auto;
+  padding:14px;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.header h1{
+  font-size:22px;
+  margin:0;
+}
+
+.header button{
+  background:#1e293b;
+  border:1px solid #334155;
+  color:#fff;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  font-size:20px;
+}
+
+.card{
+  background:#151f31;
+  border:1px solid #26344a;
+  border-radius:17px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:0 5px 18px rgba(0,0,0,.12);
+}
+
+.month{
+  text-align:center;
+  font-weight:700;
+  font-size:17px;
+  margin-bottom:15px;
+}
+
+.month button{
+  background:none;
+  border:0;
+  color:#60a5fa;
+  font-size:20px;
+  padding:0 12px;
+}
+
+.shortcuts{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.shortcut{
+  border:1px solid #334155;
+  background:#1c293d;
+  color:#fff;
+  border-radius:13px;
+  padding:12px 4px;
+  min-height:75px;
+}
+
+.shortcut .icon{
+  display:block;
+  font-size:24px;
+  margin-bottom:5px;
+}
+
+.shortcut span{
+  font-size:11px;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.metric{
+  background:#151f31;
+  border:1px solid #26344a;
+  border-radius:15px;
+  padding:14px 7px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.metric .emoji{
+  font-size:20px;
+}
+
+.metric small{
+  display:block;
+  color:#94a3b8;
+  margin-top:5px;
+}
+
+.metric strong{
+  display:block;
+  margin-top:7px;
+  font-size:14px;
+}
+
+.two-columns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.section-title h3{
+  margin:0;
+  font-size:15px;
+}
+
+.edit-btn{
+  border:0;
+  background:none;
+  color:#60a5fa;
+  font-weight:600;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #29364a;
+  padding:9px 0;
+  font-size:12px;
+}
+
+.investment{
+  text-align:center;
+}
+
+.pie{
+  width:125px;
+  height:125px;
+  border-radius:50%;
+  margin:15px auto;
+  background:
+    conic-gradient(
+      #60a5fa 0 45%,
+      #34d399 45% 72%,
+      #a78bfa 72% 100%
+    );
+}
+
+.total{
+  font-size:22px;
+  font-weight:800;
+  margin:7px 0;
+}
+
+.bottom-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#0a101d;
+  border-top:1px solid #26344a;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  z-index:100;
+}
+
+.bottom-bar button{
+  background:none;
+  border:0;
+  color:#cbd5e1;
+  font-size:19px;
+}
+
+.bottom-bar small{
+  display:block;
+  font-size:9px;
+  margin-top:3px;
+}
+
+.screen{
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+.back{
+  background:none;
+  border:0;
+  color:#60a5fa;
+  font-size:16px;
+  padding:4px 0 14px;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.summary-box{
+  background:#1c293d;
+  border-radius:12px;
+  padding:12px;
+}
+
+.summary-box small{
+  display:block;
+  color:#94a3b8;
+}
+
+.summary-box strong{
+  display:block;
+  margin-top:5px;
+  font-size:17px;
+}
+
+.progress{
+  height:8px;
+  background:#29364a;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:12px;
+}
+
+.progress-bar{
+  height:100%;
+  background:#60a5fa;
+  width:0%;
+}
+
+.launch{
+  display:grid;
+  grid-template-columns:75px 1fr 75px 30px;
+  gap:6px;
+  align-items:center;
+  margin-bottom:7px;
+}
+
+.launch input,
+.launch select{
+  width:100%;
+  min-width:0;
+  background:#0f172a;
+  border:1px solid #334155;
+  color:#fff;
+  border-radius:8px;
+  padding:9px 6px;
+  font-size:11px;
+}
+
+.delete{
+  background:#7f1d1d;
+  border:0;
+  color:#fff;
+  border-radius:8px;
+  height:35px;
+}
+
+.add{
+  width:100%;
+  margin-top:8px;
+  padding:11px;
+  border:1px dashed #475569;
+  border-radius:10px;
+  background:#172235;
+  color:#fff;
+}
+
+.save{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:0;
+  border-radius:10px;
+  background:#2563eb;
+  color:#fff;
+  font-weight:700;
+}
+
+.total-line{
+  display:flex;
+  justify-content:space-between;
+  border-top:1px solid #334155;
+  padding-top:13px;
+  margin-top:13px;
+  font-weight:800;
+}
+
+.simple-item{
+  display:grid;
+  grid-template-columns:1fr 100px 32px;
+  gap:7px;
+  margin-bottom:8px;
+}
+
+.simple-item input{
+  background:#0f172a;
+  color:#fff;
+  border:1px solid #334155;
+  border-radius:8px;
+  padding:9px;
+  min-width:0;
+}
+
+@media(max-width:420px){
+  .shortcut{
+    min-height:70px;
+  }
+
+  .shortcut .icon{
+    font-size:21px;
+  }
+
+  .launch{
+    grid-template-columns:68px 1fr 70px 28px;
+  }
+
+  .launch input,
+  .launch select{
+    font-size:10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- PÁGINA PRINCIPAL -->
+  <div id="homeScreen" class="screen active">
+
+    <div class="header">
+      <h1>Meu Financeiro</h1>
+      <button>🔔</button>
+    </div>
+
+    <div class="card">
+
+      <div class="month">
+        <button>‹</button>
+        AGOSTO 2026
+        <button>›</button>
+      </div>
+
+      <div class="shortcuts">
+
+        <button class="shortcut" onclick="openCategory('Casa')">
+          <span class="icon">🏠</span>
+          <span>Casa</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Cartão')">
+          <span class="icon">💳</span>
+          <span>Cartão</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Meu')">
+          <span class="icon">👤</span>
+          <span>Meu</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Alice')">
+          <span class="icon">👧</span>
+          <span>Alice</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Carro')">
+          <span class="icon">🚗</span>
+          <span>Carro</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Obra')">
+          <span class="icon">🏗️</span>
+          <span>Obra</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Viagem')">
+          <span class="icon">✈️</span>
+          <span>Viagem</span>
+        </button>
+
+        <button class="shortcut" onclick="openCategory('Poupança')">
+          <span class="icon">🐷</span>
+          <span>Poupança</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- DESPESAS / SALDO / RECEITAS -->
+    <div class="metrics">
+
+      <div class="metric" onclick="openSimple('Despesas')">
+        <div class="emoji">💸</div>
+        <small>Despesas</small>
+        <strong id="homeExpenses">R$ 0,00</strong>
+      </div>
+
+      <div class="metric">
+        <div class="emoji">🏦</div>
+        <small>Saldo</small>
+        <strong id="homeBalance">R$ 0,00</strong>
+      </div>
+
+      <div class="metric" onclick="openSimple('Receitas')">
+        <div class="emoji">💰</div>
+        <small>Receitas</small>
+        <strong id="homeIncome">R$ 0,00</strong>
+      </div>
+
+    </div>
+
+    <!-- CONTAS / PRÓXIMAS -->
+    <div class="two-columns">
+
+      <div class="card">
+        <div class="section-title">
+          <h3>🏦 Contas</h3>
+          <button class="edit-btn">Editar</button>
+        </div>
+
+        <div class="row">
+          <span>Banco do Brasil</span>
+          <span>R$ 0,00</span>
+        </div>
+
+        <div class="row">
+          <span>Santander</span>
+          <span>R$ 0,00</span>
+        </div>
+      </div>
+
+      <div class="card">
+
+        <div class="section-title">
+          <h3>📅 Próximas</h3>
+        </div>
+
+        <div class="row">
+          <span>🔵 Agendado</span>
+          <span>R$ 0,00</span>
+        </div>
+
+        <div class="row">
+          <span>🔴 Pendente</span>
+          <span>R$ 0,00</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- INVESTIMENTOS -->
+    <div class="card investment">
+
+      <div class="section-title">
+        <h3>📈 Investimentos</h3>
+        <button class="edit-btn" onclick="openSimple('Investimentos')">
+          Editar
+        </button>
+      </div>
+
+      <div class="pie"></div>
+
+      <small>Valor total investido</small>
+
+      <div class="total">
+        R$ 475,00
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TELA DE CATEGORIA -->
+  <div id="categoryScreen" class="screen">
+
+    <button class="back" onclick="goHome()">‹ Voltar</button>
+
+    <div class="header">
+      <h1 id="categoryTitle">Casa</h1>
+    </div>
+
+    <div class="card">
+
+      <div class="summary">
+
+        <div class="summary-box">
+          <small>Orçamento mensal</small>
+          <strong id="budgetValue">R$ 0,00</strong>
+        </div>
+
+        <div class="summary-box">
+          <small>Gasto no mês</small>
+          <strong id="spentValue">R$ 0,00</strong>
+        </div>
+
+      </div>
+
+      <div style="margin-top:12px">
+        <small style="color:#94a3b8">Disponível</small>
+        <strong id="availableValue">R$ 0,00</strong>
+      </div>
+
+      <div class="progress">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="section-title">
+        <h3>LANÇAMENTOS</h3>
+      </div>
+
+      <div style="display:grid;grid-template-columns:75px 1fr 75px 30px;gap:6px;color:#94a3b8;font-size:10px;margin-bottom:8px">
+        <span>STATUS</span>
+        <span>DESCRIÇÃO</span>
+        <span>VALOR</span>
+        <span></span>
+      </div>
+
+      <div id="launchList"></div>
+
+      <button class="add" onclick="addLaunch()">
+        ＋ Adicionar lançamento
+      </button>
+
+      <div class="total-line">
+        <span>TOTAL</span>
+        <span id="categoryTotal">R$ 0,00</span>
+      </div>
+
+      <button class="save" onclick="saveCategory()">
+        Salvar alterações
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- TELA SIMPLES -->
+  <div id="simpleScreen" class="screen">
+
+    <button class="back" onclick="goHome()">‹ Voltar</button>
+
+    <div class="header">
+      <h1 id="simpleTitle">Despesas</h1>
+    </div>
+
+    <div class="card">
+
+      <div id="simpleList"></div>
+
+      <button class="add" onclick="addSimpleItem()">
+        ＋ Adicionar
+      </button>
+
+      <div class="total-line">
+        <span>TOTAL</span>
+        <span id="simpleTotal">R$ 0,00</span>
+      </div>
+
+      <button class="save" onclick="saveSimple()">
+        Salvar alterações
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- BARRA FIXA -->
+<nav class="bottom-bar">
+
+  <button onclick="goHome()">
+    👁️
+    <small>Visão Geral</small>
+  </button>
+
+  <button onclick="openSimple('Dívidas Pessoais')">
+    💳
+    <small>Dívidas</small>
+  </button>
+
+  <button onclick="openSimple('Apartamento')">
+    🏠
+    <small>Apartamento</small>
+  </button>
+
+  <button onclick="openSimple('Pagamentos')">
+    💰
+    <small>Pagamentos</small>
+  </button>
+
+</nav>
+
+
+<script>
+
+const data = {
+
+  "Casa":{
+    budget:3325,
+    items:[
+      ["pendente","Apartamento",737],
+      ["pendente","IPTU 7 (10x)",300],
+      ["pendente","Luz",243],
+      ["pendente","Mercado",1049],
+      ["pendente","Net",249],
+      ["pendente","Condomínio",299],
+      ["pendente","Casa",261],
+      ["pendente","Seguro apt",100],
+      ["pendente","Seguro casa",46]
+    ]
+  },
+
+  "Cartão":{
+    budget:600,
+    items:[
+      ["pendente","Shopee 2 (3x)",38],
+      ["pendente","Shopee 2 (4x)",64],
+      ["pendente","Tablet 8 (10x)",185],
+      ["pendente","Vivir 3 (4x)",153],
+      ["pendente","CEA 2 (3x)",70],
+      ["pendente","Shopee 1 (2x)",64],
+      ["pendente","Growth 2 (8x)",75],
+      ["pendente","Amazon 1 (4x)",34],
+      ["pendente","Shopee 1 (2x)",61]
+    ]
+  },
+
+  "Meu":{
+    budget:1300,
+    items:[
+      ["pendente","Petlove",165],
+      ["pendente","Gym pass",150],
+      ["pendente","Empório",12],
+      ["pendente","Plano dental",92],
+      ["pendente","Plano de saúde",391],
+      ["pendente","Deezer",0],
+      ["pendente","Banco",17],
+      ["pendente","Cartão",144],
+      ["pendente","Meu cartão",401]
+    ]
+  },
+
+  "Alice":{
+    budget:1520,
+    items:[
+      ["pendente","Escola",1190],
+      ["pendente","Poupança",0],
+      ["pendente","Escola 10 (10x)",117],
+      ["pendente","Eco 7 (12x)",205]
+    ]
+  },
+
+  "Carro":{
+    budget:1140,
+    items:[
+      ["pendente","Seguro",350],
+      ["pendente","Gasolina",591],
+      ["pendente","IPVA",90],
+      ["pendente","Poupança",0],
+      ["pendente","R. Auto 5 (5x)",64],
+      ["pendente","Mercado Livre 4 (8x)",61],
+      ["pendente","Shopee 2 (3x)",66]
+    ]
+  },
+
+  "Obra":{
+    budget:740,
+    items:[
+      ["pendente","Financiamento apt",740],
+      ["pendente","Obra",0]
+    ]
+  },
+
+  "Viagem":{
+    budget:400,
+    items:[
+      ["pendente","Viagem",167],
+      ["pendente","Financiamento apt",233]
+    ]
+  },
+
+  "Poupança":{
+    budget:475,
+    items:[
+      ["pendente","Poupança",475]
+    ]
+  }
+
+};
+
+
+let currentCategory="";
+let simpleType="";
+let simpleItems=[];
+
+
+function money(value){
+
+  return Number(value || 0).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
+}
+
+
+function openCategory(category){
+
+  currentCategory=category;
+
+  const d=data[category];
+
+  document.getElementById("homeScreen").classList.remove("active");
+  document.getElementById("simpleScreen").classList.remove("active");
+  document.getElementById("categoryScreen").classList.add("active");
+
+  document.getElementById("categoryTitle").innerText=
+    category==="Cartão" ? "💳 Cartão" :
+    category==="Casa" ? "🏠 Casa" :
+    category==="Alice" ? "👧 Alice" :
+    category==="Meu" ? "👤 Meu" :
+    category==="Carro" ? "🚗 Carro" :
+    category==="Obra" ? "🏗️ Obra" :
+    category==="Viagem" ? "✈️ Viagem" :
+    "🐷 Poupança";
+
+  document.getElementById("budgetValue").innerText=money(d.budget);
+
+  renderCategory();
+
+}
+
+
+function renderCategory(){
+
+  const d=data[currentCategory];
+
+  let total=d.items.reduce(
+    (sum,item)=>sum+Number(item[2]||0),0
+  );
+
+  document.getElementById("spentValue").innerText=money(total);
+
+  document.getElementById("availableValue").innerText=
+    money(d.budget-total);
+
+  document.getElementById("categoryTotal").innerText=
+    money(total);
+
+  const percentage=
+    d.budget>0 ? Math.min(100,(total/d.budget)*100) : 0;
+
+  document.getElementById("progressBar").style.width=
+    percentage+"%";
+
+  const list=document.getElementById("launchList");
+
+  list.innerHTML="";
+
+  d.items.forEach((item,index)=>{
+
+    const div=document.createElement("div");
+
+    div.className="launch";
+
+    div.innerHTML=`
+
+      <select>
+        <option value="pendente" ${item[0]==="pendente"?"selected":""}>
+          🔴
+        </option>
+
+        <option value="agendado" ${item[0]==="agendado"?"selected":""}>
+          🔵
+        </option>
+
+        <option value="pago" ${item[0]==="pago"?"selected":""}>
+          🟢
+        </option>
+      </select>
+
+      <input
+        type="text"
+        value="${item[1]}"
+      >
+
+      <input
+        type="number"
+        step="0.01"
+        value="${item[2]}"
+      >
+
+      <button
+        class="delete"
+        onclick="deleteLaunch(${index})">
+        ×
+      </button>
+
+    `;
+
+    list.appendChild(div);
+
+  });
+
+}
+
+
+function deleteLaunch(index){
+
+  data[currentCategory].items.splice(index,1);
+
+  renderCategory();
+
+}
+
+
+function addLaunch(){
+
+  data[currentCategory].items.push(
+    ["pendente","Novo lançamento",0]
+  );
+
+  renderCategory();
+
+}
+
+
+function saveCategory(){
+
+  const rows=
+    document.querySelectorAll("#launchList .launch");
+
+  const items=[];
+
+  rows.forEach(row=>{
+
+    const status=row.querySelector("select").value;
+    const description=row.querySelectorAll("input")[0].value;
+    const value=Number(
+      row.querySelectorAll("input")[1].value
+    );
+
+    items.push([
+      status,
+      description,
+      value
+    ]);
+
+  });
+
+  data[currentCategory].items=items;
+
+  localStorage.setItem(
+    "meuFinanceiro",
+    JSON.stringify(data)
+  );
+
+  alert("Alterações salvas!");
+
+  renderCategory();
+
+}
+
+
+function openSimple(type){
+
+  simpleType=type;
+
+  document.getElementById("homeScreen").classList.remove("active");
+  document.getElementById("categoryScreen").classList.remove("active");
+  document.getElementById("simpleScreen").classList.add("active");
+
+  document.getElementById("simpleTitle").innerText=type;
+
+  simpleItems=[];
+
+  if(type==="Despesas"){
+
+    simpleItems=[
+      ["Despesas",0]
+    ];
+
+  }
+
+  if(type==="Receitas"){
+
+    simpleItems=[
+      ["Receita",0]
+    ];
+
+  }
+
+  if(type==="Investimentos"){
+
+    simpleItems=[
+      ["CDB",475],
+      ["Tesouro",0],
+      ["Outros",0]
+    ];
+
+  }
+
+  renderSimple();
+
+}
+
+
+function renderSimple(){
+
+  const list=document.getElementById("simpleList");
+
+  list.innerHTML="";
+
+  simpleItems.forEach((item,index)=>{
+
+    const div=document.createElement("div");
+
+    div.className="simple-item";
+
+    div.innerHTML=`
+
+      <input
+        type="text"
+        value="${item[0]}"
+      >
+
+      <input
+        type="number"
+        step="0.01"
+        value="${item[1]}"
+      >
+
+      <button
+        class="delete"
+        onclick="deleteSimple(${index})">
+        ×
+      </button>
+
+    `;
+
+    list.appendChild(div);
+
+  });
+
+  updateSimpleTotal();
+
+}
+
+
+function updateSimpleTotal(){
+
+  const total=simpleItems.reduce(
+    (sum,item)=>sum+Number(item[1]||0),0
+  );
+
+  document.getElementById("simpleTotal").innerText=
+    money(total);
+
+}
+
+
+function addSimpleItem(){
+
+  simpleItems.push(["Novo item",0]);
+
+  renderSimple();
+
+}
+
+
+function deleteSimple(index){
+
+  simpleItems.splice(index,1);
+
+  renderSimple();
+
+}
+
+
+function saveSimple(){
+
+  const rows=
+    document.querySelectorAll("#simpleList .simple-item");
+
+  simpleItems=[];
+
+  rows.forEach(row=>{
+
+    const name=row.querySelectorAll("input")[0].value;
+    const value=Number(
+      row.querySelectorAll("input")[1].value
+    );
+
+    simpleItems.push([name,value]);
+
+  });
+
+  updateSimpleTotal();
+
+  localStorage.setItem(
+    "meuFinanceiro_"+simpleType,
+    JSON.stringify(simpleItems)
+  );
+
+  alert("Alterações salvas!");
+
+}
+
+
+function goHome(){
+
+  document.getElementById("categoryScreen").classList.remove("active");
+  document.getElementById("simpleScreen").classList.remove("active");
+  document.getElementById("homeScreen").classList.add("active");
+
+}
+
+
+function loadData(){
+
+  const saved=localStorage.getItem("meuFinanceiro");
+
+  if(saved){
+
+    try{
+
+      const parsed=JSON.parse(saved);
+
+      Object.keys(parsed).forEach(key=>{
+
+        if(data[key]){
+          data[key]=parsed[key];
+        }
+
+      });
+
+    }catch(e){}
+
+  }
+
+}
+
+
+loadData();
+
+</script>
+
+</body>
+</html>
